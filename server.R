@@ -40,9 +40,9 @@ shinyServer(function(input, output) {
     x <- mtcars$mpg
     bins <- seq(min(x), max(x), length.out = input$bins + 1)
     
-    h<-hist(x, breaks=bins, col="red", xlab="Miles per gallon", ylab="Frequency of Cars", main="Cars per mpg") 
+    h<-hist(x, breaks=bins, col="red", xlab="Miles per gallon", ylab="Frequency of Cars", main="Car grouped by mpg") 
     
-    # Add a Normal Curve (Thanks to Peter Dalgaard)
+    # Add a Normal Curve. (Thanks to Peter Dalgaard for following code.)
     xfit<-seq(min(x),max(x),length=40) 
     yfit<-dnorm(xfit,mean=mean(x),sd=sd(x)) 
     yfit <- yfit*diff(h$mids[1:2])*length(x) 
@@ -54,8 +54,9 @@ shinyServer(function(input, output) {
     summary(fit())
   })
   
-  # Call-back for regression line
+  # Call-back for plot and red regression line
   output$mpgPlot <- renderPlot({
+    par(bg = "palegoldenrod")
     with(mtcars, {
       plot(as.formula(formulaTextPoint()))
       abline(fit(), col="red")
