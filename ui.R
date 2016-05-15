@@ -13,11 +13,13 @@ shinyUI(
                       "The data is from the 1974 Motor Trend magazine article that lists 10 car specifications for 32 different types of cars. The manual cars in the set of data tend to have better MPG ratings but this can be explained by other specifications such as horsepower and weight.",
                       hr(),
                       h4("Original Project"),
-                      helpText(  a("View PDF on GitHub", href="https://github.com/JamesPortman/DevelopingDataProducts/blob/master/DoesTransmissionTypeAffectMPG.pdf"))
+                      helpText(  a("View PDF paper on GitHub", href="https://github.com/JamesPortman/DevelopingDataProducts/blob/master/DoesTransmissionTypeAffectMPG.pdf"))
              ),
              
              # Panel 2 Show a basic histogram of the data with a normal curve superimposed
              tabPanel("Histogram",
+                      
+                      "Number of bins can be adjusted to see how closely we match a Normal distribution",
                       
                       sidebarPanel(
                         sliderInput("bins",
@@ -39,7 +41,7 @@ shinyUI(
                         titlePanel("Variables affecting miles per gallon"),
                         sidebarLayout(
                           sidebarPanel(
-                            selectInput("variable", "Variable:",
+                            selectInput("variable", "Variable affecting mpg:",
                                         c("Transmission" = "am",
                                           "Horsepower" = "hp",
                                           "Weight" = "wt",
