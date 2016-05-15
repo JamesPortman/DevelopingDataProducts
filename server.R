@@ -1,9 +1,12 @@
+# server.R
+# Date: May 14, 2016
+# Author: James Portman
+
 library(shiny)
 library(datasets)
 
 mtcars$am <- as.factor(mtcars$am)
 levels(mtcars$am) <- c("Automatic", "Manual")
-mpgData <- mtcars
 
 shinyServer(function(input, output) {
   
@@ -12,27 +15,29 @@ shinyServer(function(input, output) {
   })
   
   formulaTextPoint <- reactive({
-    paste("mpg ~", "as.integer(", input$variable, ")")
+   paste("mpg ~", "as.integer(", input$variable, ")")
   })
   
   fit <- reactive({
-    lm(as.formula(formulaTextPoint()), data = mpgData)
+    lm(as.formula(formulaTextPoint()), data = mtcars)
   })
   
   output$caption <- renderText({
     formulaText()
   })
   
+  # Call-back for Box Plots
   output$mpgBoxPlot <- renderPlot({
     boxplot(as.formula(formulaText()), 
-            data = mpgData,
+            data = mtcars,
             xlab="Miles per Gallon",
             horizontal = TRUE)
   })
   
+  # Call-back for Histograms
   output$mpgHistPlot <- renderPlot({
    
-    x <- mpgData$mpg
+    x <- mtcars$mpg
     bins <- seq(min(x), max(x), length.out = input$bins + 1)
     
     h<-hist(x, breaks=bins, col="red", xlab="Miles per gallon", ylab="Frequency of Cars", main="Cars per mpg") 
@@ -42,19 +47,20 @@ shinyServer(function(input, output) {
     yfit<-dnorm(xfit,mean=mean(x),sd=sd(x)) 
     yfit <- yfit*diff(h$mids[1:2])*length(x) 
     lines(xfit, yfit, col="blue", lwd=2)
-    
-    
   })
   
+  # Call-back for summary at bottom
   output$fit <- renderPrint({
     summary(fit())
   })
   
+  # Call-back for regression line
   output$mpgPlot <- renderPlot({
-    with(mpgData, {
+    with(mtcars, {
       plot(as.formula(formulaTextPoint()))
-      abline(fit(), col=2)
+      abline(fit(), col="red")
     })
   })
   
 })
+# End server.R
